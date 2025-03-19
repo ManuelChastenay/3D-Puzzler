@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 0954e3f29dd66634fa1ff8a7fc7b417a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - FaceSwitcher: {fileID: 7549506151703439218, guid: d561e867fa1dee240914b7d7ef3fe987, type: 3}
+  - Block: {fileID: 3054929009207560010, guid: 73d0866375130ac44ad36cc302960b3d, type: 3}
+  - MovableBlock: {fileID: 3054929009207560010, guid: ff83b737cf8ec0a428416ecf753023fb, type: 3}
+  - Stairs: {fileID: 8725665788753899095, guid: d9608b64742af6546809081f939ef61f, type: 3}
+  - Elevator: {fileID: 2514143118812368984, guid: 48ca95d2997500b42bfdc3d30b9420b9, type: 3}
+  - PlayerEnding: {fileID: 2578314153970962221, guid: 590d49bc5243ac345ae78cfc84ac6273, type: 3}
+  - ElementCube: {fileID: 251701896852333260, guid: 9ccc71c96dec89947b5889c330e08819, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
