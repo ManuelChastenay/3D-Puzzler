@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour
 		inputActions.Player.Enable();
 		inputActions.Player.Move.performed += OnMove;
 		inputActions.Player.RotateCamera.performed += OnRotateCamera;
+		inputActions.Player.Zoom.performed += OnZoom;
 		//inputActions.Player.Restart.performed += OnRestart;
 	}
 
@@ -27,6 +28,7 @@ public class InputManager : MonoBehaviour
 	{
 		inputActions.Player.Move.performed -= OnMove;
 		inputActions.Player.RotateCamera.performed -= OnRotateCamera;
+		inputActions.Player.Zoom.performed -= OnZoom;
 		//inputActions.Player.Restart.performed -= OnRestart;
 		inputActions.Player.Disable();
 	}
@@ -58,6 +60,14 @@ public class InputManager : MonoBehaviour
 		int moveCameraInput = (int)cbc.ReadValue<float>();
 
 		cam.ManageRotation(moveCameraInput);
+	}
+
+	private void OnZoom(InputAction.CallbackContext cbc)
+	{
+		Vector2 scrollInput = cbc.ReadValue<Vector2>();
+		float zoomInput = scrollInput.y;
+		Debug.Log(zoomInput);
+		cam.ManageZoom(zoomInput);
 	}
 }
 

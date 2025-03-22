@@ -3,18 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using Unity.Cinemachine;
 public class CameraController : MonoBehaviour
 {
 	public bool actionOngoing = false;
 
 	[SerializeField] private float MOVE_DURATION;
-	[SerializeField] private Camera cam;
+    [SerializeField] private float ZOOM_SENSIBILITY;
+    [SerializeField] private Camera cam;
 	[SerializeField] private Player player;
 	private int camIndex = 0;
 
 	private float timer;
 	private Dictionary<Faces, List<Transform>> currentCubeFCMap;
+
+	private CinemachineBrain cinemachineBrain;
 
 	public static CameraController Instance;
 
@@ -33,6 +36,7 @@ public class CameraController : MonoBehaviour
 		transform.parent = ct;
 		transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 		cam.orthographicSize = player.currentCube.size;
+		cinemachineBrain = GetComponent<CinemachineBrain>();
 	}
 
 	private void Update()
@@ -52,14 +56,26 @@ public class CameraController : MonoBehaviour
 	{
 		if (actionOngoing) return;
 
-		//TODO Wont work if not facing desired side. Implement graph lookup table for closest cam facing face?
-		List<Transform> FFCT = currentCubeFCMap[fromFace.face];
-		List<Transform> TFCT = currentCubeFCMap[toFace.face];
-		Transform ct = TFCT.Find(ct => ct.position == transform.position);
-		camIndex = TFCT.IndexOf(ct);
+        //TO CHANGE
+        ICinemachineCamera liveCam = cam.GetComponent<CinemachineBrain>().ActiveVirtualCamera;
+        CinemachineCamera cinemachineCamera = liveCam as CinemachineCamera;
+        if (cinemachineCamera != null)
+        {
+            //rotate cam to 90 °
+            cinemachineCamera.transform.Rotate(0, 90, 0);
+			Debug.Log("Rotate cam to 90 °");
 
-		StartCoroutine(RotateCameraOnAxisCoroutine(ct));
-	}
+
+        }
+
+        //TODO Wont work if not facing desired side. Implement graph lookup table for closest cam facing face?
+        //List<Transform> FFCT = currentCubeFCMap[fromFace.face];
+        //List<Transform> TFCT = currentCubeFCMap[toFace.face];
+        //Transform ct = TFCT.Find(ct => ct.position == transform.position);
+        //camIndex = TFCT.IndexOf(ct);
+
+        //StartCoroutine(RotateCameraOnAxisCoroutine(ct));
+    }
 
 	public void OnCubeSwitched(ElementCube toCube, Faces toCubeFloor)
 	{
@@ -156,4 +172,15 @@ public class CameraController : MonoBehaviour
 		currentCubeFCMap = ec.linkedCube.GetFaceCamerasMap();
 		ec.mr.sharedMaterial.color = baseColor;
 	}
+
+    public void ManageZoom(float zoomInput)
+    {
+        ICinemachineCamera liveCam = cam.GetComponent<CinemachineBrain>().ActiveVirtualCamera;
+        CinemachineCamera cinemachineCamera = liveCam as CinemachineCamera;
+        if (cinemachineCamera != null)
+        {
+            cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize -= zoomInput * ZOOM_SENSIBILITY;
+            if (cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize < 0.5f) cinemachineCamera.GetComponent<CinemachineCamera>().Lens.OrthographicSize = 0.5f;	
+        }
+    }
 }
